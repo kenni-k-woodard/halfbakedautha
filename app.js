@@ -24,7 +24,13 @@ signInForm.addEventListener('submit', async (e) => {
 signUpForm.addEventListener('submit', async (e) => {
     e.preventDefault();
 
-    await signupUser(signUpEmail.value, signUpPassword.value);
+    const user = await signupUser(signUpEmail.value, signUpPassword.value);
+
+    if (user) {
+        redirectIfLoggedIn('/other-page');
+    } else {
+        console.error(user);
+    }
 });
 
 // Redirect to /other-page on successful auth
