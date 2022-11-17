@@ -1,6 +1,7 @@
 // Enter Supabase Information
-const SUPABASE_URL = '';
-const SUPABASE_KEY = '';
+const SUPABASE_URL = 'https://redfcyboqrqwpbcseyiu.supabase.co';
+const SUPABASE_KEY =
+    'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6InJlZGZjeWJvcXJxd3BiY3NleWl1Iiwicm9sZSI6ImFub24iLCJpYXQiOjE2NjgxMDgwNjAsImV4cCI6MTk4MzY4NDA2MH0.OoXlk2kwsTh4QiT7WNyjocL1GPxxVvERWoKwz167v0o';
 
 const client = supabase.createClient(SUPABASE_URL, SUPABASE_KEY);
 
@@ -8,12 +9,34 @@ export function getUser() {
     return client.auth.session() && client.auth.session().user;
 }
 
-export async function signupUser(email, password) {}
+export async function signupUser(email, password) {
+    const response = await client.auth.signUp({ email, password });
 
-export async function signInUser(email, password) {}
+    return response.user;
+}
 
-export async function checkAuth() {}
+export async function signInUser(email, password) {
+    const response = await client.auth.signIn({ email, password });
 
-export async function redirectIfLoggedIn() {}
+    return response.user;
+}
 
-export async function logout() {}
+export async function checkAuth() {
+    const user = await getUser();
+
+    if (!user) location.replace('../');
+}
+
+export async function redirectIfLoggedIn() {
+    const user = await getUser();
+
+    if (user) {
+        location.replace('./other-page');
+    }
+}
+
+export async function logout() {
+    await client.auth.signOut();
+
+    return (window.location.href = '../');
+}
